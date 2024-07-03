@@ -1,8 +1,20 @@
-# Honkai-StarRail-Daily-Quests
-Clear Daily Quests of Honkai: StarRail with one click!
+# Honkai-StarRail-Daily-Quests  
+基于pyautogui的自动化每日刷取体力脚本  
 
-
-
-第一次使用请确保您电脑上拥有Python 然后运行Install_Requirements.py
+第一次使用请确保您电脑上拥有Python  
+然后运行Install_Requirements.py  
 -----------------------------------
-以后只需要运行Launch.py即可
+以后只需要运行Launch.py即可  
+开发日志  
+v1.0  
+功能：刷取拟造花萼（金）以及侵蚀隧洞的死水，大公和信使本  
+P.S.目前仅支持中文客户端  
+未来展望（已发现问题）：  
+1.进入指南界面一次性搜索副本存在失败可能  
+2.拟造花萼（金）需要调整挑战次数与侵蚀隧洞不同  
+3.没有考虑月卡玩家的使用  
+4.未登录玩家需手动登录  
+5.目前使用手动安装的策略，未来希望通过pyinstaller进行文件整合，好让用户不再需要自行安装依赖  
+6.侵蚀隧洞的遗器类别不全  
+7.拟造花萼（金）仅仅只能刷取已选择地区  
+8.存在可能取消原有2倍速的情况

@@ -198,12 +198,20 @@ class BasicUI:
         self.locate_and_click('EnterGame.png',0.8)
 
         #MonthlyPass
+<<<<<<< HEAD
         if self.checkbox_var.get():
             self.locate_and_click("MonthlyPass1.png", 0.8)
 
             self.locate_only("MonthlyPass2.png", 0.8)
 
             pyautogui.click(self.center_x, self.center_y + 600)
+=======
+        self.locate_and_click("MonthlyPass1.png", 0.8)
+
+        self.locate_only("MonthlyPass2.png", 0.8)
+
+        pyautogui.click(self.center_x, self.center_y + 600)
+>>>>>>> c5ada6041ae01733bbf3670db15c9bddd2d984c8
 
         self.locate_only('EnterGameDetector.png',0.8)
         pyautogui.press('esc')
@@ -247,6 +255,7 @@ class BasicUI:
 
         self.locate_and_click('Challenge.png',0.9)
         self.locate_and_click('StartCombat.png',0.9)
+<<<<<<< HEAD
         time.sleep(1)
         found = False
         while not found:
@@ -260,6 +269,12 @@ class BasicUI:
                     found = True
                 except:
                     time.sleep(1)
+=======
+        while not (self.one_time_locate_bool("SpedUp",0.9) ^ self.one_time_locate_bool("SpeedUp",0.9)):
+            pass
+        if not self.one_time_locate_bool("SpedUp",0.9):
+            self.locate_and_click('SpeedUp.png',0.9)
+>>>>>>> c5ada6041ae01733bbf3670db15c9bddd2d984c8
         self.locate_and_click('Auto.png',0.9)
         for i in range(0,int(self.times.get())):
             self.locate_and_click('Restart.png',0.9)
