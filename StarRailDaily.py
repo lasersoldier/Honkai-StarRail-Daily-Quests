@@ -11,6 +11,20 @@ class BasicUI:
     center_x = screen_width / 2
     center_y = screen_height / 2
 
+    missions = {
+        "死水套&机心套": "MengQian.png",
+        "大公套&幽锁套": "YouMing.png",
+        "莳者套&信使套": "YaoShi.png",
+        "快枪手套&猎人套": "Default.png",
+        "过客套&圣骑士套": "Default.png",
+        "铁卫套&量子套": "Default.png",
+        "拳王套&火匠套": "Default.png",
+        "雷套&怪盗套": "Default.png",
+        "风套&废土套": "Default.png",
+        "漫游指南": "Exp.png",
+        "光锥强化材料": "WeaponExp.png",
+        "信用点": "Credit.png"
+    }
     def mouse_center(self):
         pyautogui.moveTo(self.center_x, self.center_y)
     
@@ -80,19 +94,10 @@ class BasicUI:
             self.game_address = self.default_game_address
             self.directory_label.config(text=f"所选位置: {self.game_address}")
 
-    def get_mission(self,mission_name):
-        if mission_name == "死水套&机心套":
-            return "MengQian.png"
-        if mission_name == "大公套&幽锁套":
-            return "YouMing.png"
-        if mission_name == "莳者套&信使套":
-            return "YaoShi.png"
-        if mission_name == "漫游指南":
-            return "Exp.png"
-        if mission_name == "光锥强化材料":
-            return "WeaponExp.png"
-        if mission_name == "信用点":
-            return "Credit.png"
+
+
+    def get_mission(self, mission_name):
+        return self.missions.get(mission_name, "Default.png")
 
     def start_task_thread(self):
         if self.game_address and not self.string_label.cget("text")=="当前未选择副本类型":
@@ -101,7 +106,9 @@ class BasicUI:
     
     def __init__(self, root):
         self.root = root
-        self.root.title("星琼铁道日常")
+        self.root.title("星穹铁道日常")
+
+        self.root.geometry("600x800")
 
         #Game Directory
         self.default_game_address = "C:/Program Files/HoYoPlay/launcher.exe"
@@ -111,7 +118,7 @@ class BasicUI:
         self.select_directory_button.pack(pady=10)
 
         
-        self.directory_label = tk.Label(root, text=f"所选位置: {self.game_address}")
+        self.directory_label = tk.Label(root, text=f"所选位置: {self.game_address}",wraplength=500)
         self.directory_label.pack(pady=10)
 
         #Quest Type
@@ -120,11 +127,20 @@ class BasicUI:
 
         #quest_type value here
         self.quest_type = tk.StringVar()
-        
-        self.button1 = tk.Button(root, text="侵蚀隧洞", command=lambda: (self.quest_type.set("ErosionTunnel.png"), self.update_quest_type_display(), self.update_dropdown_menu(["死水套&机心套","大公套&幽锁套","莳者套&信使套"])))
-        self.button1.pack(pady=5)
-        self.button2 = tk.Button(root, text="拟造花萼（金）", command=lambda: (self.quest_type.set("ArtificialBlossom.png"), self.update_quest_type_display(), self.update_dropdown_menu(["漫游指南","光锥强化材料","信用点"])))
-        self.button2.pack(pady=5)
+
+        self.quest_frame = tk.Frame(root)
+        self.quest_frame.pack(pady=10)
+
+        #ErosionTunnel
+        self.button1 = tk.Button(self.quest_frame, text="侵蚀隧洞", command=lambda: (self.quest_type.set("ErosionTunnel.png"),
+                                                                                     self.update_quest_type_display(),
+                                                                                     self.update_dropdown_menu(list(self.missions.keys())[:9])))
+        #ArtificialBlossom
+        self.button1.pack(side=tk.LEFT,padx=5)
+        self.button2 = tk.Button(self.quest_frame, text="拟造花萼（金）", command=lambda: (self.quest_type.set("ArtificialBlossom.png"),
+                                                                                         self.update_quest_type_display(),
+                                                                                         self.update_dropdown_menu(list(self.missions.keys())[9:])))
+        self.button2.pack(side=tk.LEFT,padx=5)
 
         # Add a label to display the current quest type
         self.string_label = tk.Label(root, text="")
@@ -151,6 +167,12 @@ class BasicUI:
         self.times_entry = tk.Entry(root, textvariable=self.times, validate='key', validatecommand=vcmd)
         self.times_entry.pack(pady=10)
 
+        self.checkbox_var = tk.BooleanVar()
+        
+        # Monthly Pass checkbox
+        self.checkbox = tk.Checkbutton(root, text="小月卡", variable=self.checkbox_var, command=None)
+        self.checkbox.pack(pady=10)
+
         self.button_frame = tk.Frame(root)
         self.button_frame.pack(pady=10)
 
@@ -174,6 +196,15 @@ class BasicUI:
         self.locate_and_click('Launch.png',0.8)
         self.locate_and_click('StartGame.png',0.8)
         self.locate_and_click('EnterGame.png',0.8)
+
+        #MonthlyPass
+        if self.checkbox_var.get():
+            self.locate_and_click("MonthlyPass1.png", 0.8)
+
+            self.locate_only("MonthlyPass2.png", 0.8)
+
+            pyautogui.click(self.center_x, self.center_y + 600)
+
         self.locate_only('EnterGameDetector.png',0.8)
         pyautogui.press('esc')
         self.locate_and_click('Guide.png',0.8)
@@ -183,7 +214,7 @@ class BasicUI:
         while not found:
             try:
                 self.one_time_locate_only("TeleportUnselected.png",0.8)
-                pyautogui.click()
+                self.locate_and_click("TeleportUnselected.png",0.8)
                 found = True
             except:
                 try:
@@ -198,7 +229,6 @@ class BasicUI:
         #Choose what to get 2 and locate teleport
         self.mouse_center()
         found = False
-        print(self.get_mission(self.option_menu.get()))
         while not self.one_time_locate_bool(self.get_mission(self.option_menu.get()),0.9):
             pyautogui.scroll(-3)
         image_path = os.path.join(os.path.dirname(__file__), 'Image', self.get_mission(self.option_menu.get()))
@@ -217,8 +247,19 @@ class BasicUI:
 
         self.locate_and_click('Challenge.png',0.9)
         self.locate_and_click('StartCombat.png',0.9)
-        if not self.one_time_locate_bool("SpedUp",0.9):
-            self.locate_and_click('SpeedUp.png',0.9)
+        time.sleep(1)
+        found = False
+        while not found:
+            try:
+                self.one_time_locate_only("SpeedUp.png",0.8)
+                self.locate_and_click("SpeedUp.png",0.8)
+                found = True
+            except:
+                try:
+                    self.one_time_locate_only("SpedUp.png",0.8)
+                    found = True
+                except:
+                    time.sleep(1)
         self.locate_and_click('Auto.png',0.9)
         for i in range(0,int(self.times.get())):
             self.locate_and_click('Restart.png',0.9)
