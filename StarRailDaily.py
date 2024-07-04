@@ -5,6 +5,7 @@ import pyautogui
 import time
 import os
 import threading
+import sys
 
 class BasicUI:
     screen_width, screen_height = pyautogui.size()
@@ -25,11 +26,17 @@ class BasicUI:
         "光锥强化材料": "WeaponExp.png",
         "信用点": "Credit.png"
     }
+    
     def mouse_center(self):
         pyautogui.moveTo(self.center_x, self.center_y)
-    
+
+    if getattr(sys, 'frozen', False):
+        application_path = os.path.dirname(sys.executable)
+    else:
+        application_path = os.path.dirname(os.path.abspath(__file__))
+
     def locate_and_click(self, image_name, conf):
-        image_path = os.path.join(os.path.dirname(__file__), 'Image', image_name)
+        image_path = os.path.join(self.application_path, 'Image', image_name)
         found = False
         while not found:
             try:
@@ -39,7 +46,7 @@ class BasicUI:
                 time.sleep(1)
                 
     def locate_only(self, image_name, conf):
-        image_path = os.path.join(os.path.dirname(__file__), 'Image', image_name)
+        image_path = os.path.join(self.application_path, 'Image', image_name)
         found = False
         while not found:
             try:
@@ -49,14 +56,14 @@ class BasicUI:
                 time.sleep(1)
                 
     def one_time_locate_only(self, image_name, conf):
-        image_path = os.path.join(os.path.dirname(__file__), 'Image', image_name)
+        image_path = os.path.join(self.application_path, 'Image', image_name)
         try:
             pyautogui.moveTo(pyautogui.locateOnScreen(image_path, confidence=conf))
         except Exception as e:
             return
     
     def one_time_locate_bool(self, image_name, conf):
-        image_path = os.path.join(os.path.dirname(__file__), 'Image', image_name)
+        image_path = os.path.join(self.application_path, 'Image', image_name)
         try:
             pyautogui.moveTo(pyautogui.locateOnScreen(image_path, confidence=conf))
             return True
@@ -198,20 +205,17 @@ class BasicUI:
         self.locate_and_click('EnterGame.png',0.8)
 
         #MonthlyPass
-<<<<<<< HEAD
         if self.checkbox_var.get():
             self.locate_and_click("MonthlyPass1.png", 0.8)
 
             self.locate_only("MonthlyPass2.png", 0.8)
 
             pyautogui.click(self.center_x, self.center_y + 600)
-=======
         self.locate_and_click("MonthlyPass1.png", 0.8)
 
         self.locate_only("MonthlyPass2.png", 0.8)
 
         pyautogui.click(self.center_x, self.center_y + 600)
->>>>>>> c5ada6041ae01733bbf3670db15c9bddd2d984c8
 
         self.locate_only('EnterGameDetector.png',0.8)
         pyautogui.press('esc')
@@ -239,9 +243,9 @@ class BasicUI:
         found = False
         while not self.one_time_locate_bool(self.get_mission(self.option_menu.get()),0.9):
             pyautogui.scroll(-3)
-        image_path = os.path.join(os.path.dirname(__file__), 'Image', self.get_mission(self.option_menu.get()))
+        image_path = os.path.join(self.application_path, 'Image', self.get_mission(self.option_menu.get()))
         location = pyautogui.locateOnScreen(image_path, confidence = 0.9)
-        teleport_image_path = os.path.join(os.path.dirname(__file__), 'Image', "Teleport.png")
+        teleport_image_path = os.path.join(self.application_path, 'Image', "Teleport.png")
         teleport_locations = list(pyautogui.locateAllOnScreen(teleport_image_path, confidence=0.7))
         min_diff = float('inf')
         best_location = None
@@ -255,7 +259,7 @@ class BasicUI:
 
         self.locate_and_click('Challenge.png',0.9)
         self.locate_and_click('StartCombat.png',0.9)
-<<<<<<< HEAD
+
         time.sleep(1)
         found = False
         while not found:
@@ -269,12 +273,11 @@ class BasicUI:
                     found = True
                 except:
                     time.sleep(1)
-=======
+
         while not (self.one_time_locate_bool("SpedUp",0.9) ^ self.one_time_locate_bool("SpeedUp",0.9)):
             pass
         if not self.one_time_locate_bool("SpedUp",0.9):
             self.locate_and_click('SpeedUp.png',0.9)
->>>>>>> c5ada6041ae01733bbf3670db15c9bddd2d984c8
         self.locate_and_click('Auto.png',0.9)
         for i in range(0,int(self.times.get())):
             self.locate_and_click('Restart.png',0.9)
